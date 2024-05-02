@@ -1,0 +1,19 @@
+﻿using PokemonReviewapp.Models;
+using PokemonReviewapp.Dto;
+
+
+namespace PokemonReviewapp.Dto
+{
+    public class ReviewerDto
+    {
+     
+        public int Id { get; set; }
+
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
+        public ICollection<ReviewDto> Reviews { get; set; }
+
+    }
+}
