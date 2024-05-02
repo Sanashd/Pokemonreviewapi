@@ -21,9 +21,6 @@ namespace PokemonReviewapp.Controllers
             _mapper = mapper;
         }
 
-
-
-
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Pokemon>))]
         public IActionResult GetPokemons()
