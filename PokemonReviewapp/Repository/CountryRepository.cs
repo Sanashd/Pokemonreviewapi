@@ -8,9 +8,9 @@ namespace PokemonReviewapp.Repository
     public class CountryRepository : ICountryRepository
     {
         private readonly DataContext _context;
-        private readonly IMapper mapper;
+        private readonly IMapper _mapper;
 
-        public CountryRepository(DataContext context, IMapper _mapper)
+        public CountryRepository(DataContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -18,7 +18,12 @@ namespace PokemonReviewapp.Repository
         public bool CountryExists(int id)
         {
             return _context.Countries.Any(c => c.Id == id);     
+        }
 
+        public bool CreateCountry(Country country)
+        {
+            _context.Add(country);
+            return Save();
         }
 
         public ICollection<Country> GetCountries()
@@ -39,6 +44,12 @@ namespace PokemonReviewapp.Repository
         public ICollection<Owner> GetOwnersFromACountry(int countryId)
         {
             return _context.Owners.Where(c => c.Country.Id == countryId).ToList();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }
