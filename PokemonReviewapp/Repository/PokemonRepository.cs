@@ -1,6 +1,7 @@
 ﻿using PokemonReviewapp.Data;
 using PokemonReviewapp.Interfaces;
 using PokemonReviewapp.Models;
+using System.Reflection.Metadata.Ecma335;
 
 namespace PokemonReviewapp.Repository
 {
@@ -17,9 +18,32 @@ namespace PokemonReviewapp.Repository
         
         }
 
-        public bool CreatePokemon(int ownerId, int categoryId, Pokemon pokemon)
+        public bool CreatePokemon(int ownerId, int catId, Pokemon pokemon)
         {
-            throw new NotImplementedException();
+            var pokemonOwnerEntity = _context.Owners.Where(a => a.Id == ownerId).FirstOrDefault();  
+
+            var category = _context.Categories.Where(a => a.Id == catId).FirstOrDefault();
+
+            var pokemonOwner = new PokemonOwner() 
+            {  
+             Owner = pokemonOwnerEntity,
+             Pokemon = pokemon, 
+            };
+
+            _context.Add(pokemonOwner);
+
+
+            var pokemonCategory = new PokemonCategory()
+            {
+                Category = category,
+                Pokemon = pokemon,
+            };
+
+            _context.Add(pokemonCategory);
+            _context.Add(pokemon);
+
+            return Save();
+
         }
 
         public bool DeletePokemon(Pokemon pokemon)
@@ -63,7 +87,9 @@ namespace PokemonReviewapp.Repository
 
         public bool Save()
         {
-            throw new NotImplementedException();
+           var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
+
         }
 
         public bool UpdatePokemon(int ownerId, int categoryId, Pokemon pokemon)
