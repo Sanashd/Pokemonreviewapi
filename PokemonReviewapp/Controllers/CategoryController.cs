@@ -141,12 +141,5 @@ namespace PokemonReviewapp.Controllers
 
         }
    
-
-       
-
-
-
-
-
     }
     }
