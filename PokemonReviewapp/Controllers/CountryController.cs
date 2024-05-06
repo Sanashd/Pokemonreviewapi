@@ -164,7 +164,7 @@ namespace PokemonReviewapp.Controllers
 
             if (!_countryRepository.DeleteCountry(countryToDelete))
             {
-                ModelState.AddModelError("", "Something went wrong deleting category");
+                ModelState.AddModelError("", "Something went wrong deleting country");
             }
 
             return Ok("Successfully Deleted");
