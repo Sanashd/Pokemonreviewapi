@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using PokemonReviewapp.Dto;
 using PokemonReviewapp.Interfaces;
 using PokemonReviewapp.Models;
@@ -79,17 +80,17 @@ namespace PokemonReviewapp.Controllers
             {
                 ModelState.AddModelError("", "Category already exists");
                 return StatusCode(422, ModelState);
-                
+
             }
 
             if (!ModelState.IsValid)
-           
+
                 return BadRequest(ModelState);
 
             var categoryMap = _mapper.Map<Category>(categoryCreate);
-           
 
-            if(!_categoryRepository.CreateCategory(categoryMap))
+
+            if (!_categoryRepository.CreateCategory(categoryMap))
             {
 
                 ModelState.AddModelError("", "Something went wrong while saving");
@@ -97,14 +98,55 @@ namespace PokemonReviewapp.Controllers
 
             }
 
-            return Ok("Successfully Created ");    
+            return Ok("Successfully Created ");
 
         }
 
+        [HttpPut]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+
+        public IActionResult UpdateCategory(int categoryId, [FromBody] CategoryDto updatedCategory)
+        {
+
+            if (updatedCategory == null)
+                return BadRequest(ModelState);
+
+
+            if (categoryId != updatedCategory.Id)
+                return BadRequest(ModelState);
+
+
+            if (!ModelState.IsValid)
+
+                return BadRequest(ModelState);
+
+            if (!_categoryRepository.CategoryExists(categoryId))
+                return NotFound();
 
 
 
+            var categoryMap = _mapper.Map<Category>(updatedCategory);
 
+            if (!_categoryRepository.UpdateCategory(categoryMap))
+            {
+
+                ModelState.AddModelError("", "Something went wrong while updating category");
+                return StatusCode(500, ModelState);
+                
+            }
+
+            return Ok("Successfully Updated"); 
 
         }
+   
+
+       
+
+
+
+
+
+    }
     }
