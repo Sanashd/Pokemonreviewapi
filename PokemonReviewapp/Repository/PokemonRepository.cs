@@ -94,7 +94,8 @@ namespace PokemonReviewapp.Repository
 
         public bool UpdatePokemon(int ownerId, int categoryId, Pokemon pokemon)
         {
-            throw new NotImplementedException();
+            _context.Update(pokemon);
+            return Save();
         }
     }
 }

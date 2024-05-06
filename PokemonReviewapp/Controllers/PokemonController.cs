@@ -107,5 +107,47 @@ namespace PokemonReviewapp.Controllers
             return Ok("Successfully Created ");
 
         }
+
+        [HttpPut("{pokeId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+
+        public IActionResult UpdatePokemon(int pokeId,
+            [FromQuery] int ownerId, [FromQuery] int catId,
+            [FromBody] PokemonDto updatedPokemon)
+        {
+
+            if (updatedPokemon == null)
+                return BadRequest(ModelState);
+
+
+            if (pokeId != updatedPokemon.Id)
+                return BadRequest(ModelState);
+
+
+            if (!ModelState.IsValid)
+
+                return BadRequest(ModelState);
+
+            if (!_pokemonRepository.PokemonExists(pokeId))
+                return NotFound();
+
+
+
+            var pokemonMap = _mapper.Map<Pokemon>(updatedPokemon);
+
+            if (!_pokemonRepository.UpdatePokemon(ownerId, catId, pokemonMap))
+            {
+
+                ModelState.AddModelError("", "Something went wrong while updating Pokemon");
+                return StatusCode(500, ModelState);
+
+            }
+
+            return Ok("Successfully Updated");
+
+        }
+
     }
 }
