@@ -9,13 +9,20 @@ namespace PokemonReviewapp.Repository
     public class ReviewerRepository : IReviewerRepository
     {
         private readonly DataContext _context;
-        private readonly IMapper mapper;
+        private readonly IMapper _mapper;
 
         public ReviewerRepository(DataContext context, IMapper mapper)
         {
             _context = context;
-            this.mapper = mapper;
+            _mapper = mapper;
         }
+
+        public bool CreateReviewer(Reviewer reviewer)
+        {
+            _context.Add(reviewer);
+            return Save();
+        }
+
         public Reviewer GetReviewer(int reviewerId)
         {
             return _context.Reviewers.Where(r => r.Id == reviewerId).Include(e => e.Reviews).FirstOrDefault();
@@ -35,6 +42,13 @@ namespace PokemonReviewapp.Repository
         public bool ReviewerExists(int reviewerId)
         {
             return _context.Reviewers.Any(r => r.Id == reviewerId );
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges(); 
+            return saved > 0 ? true : false;    
+
         }
     }
 }
